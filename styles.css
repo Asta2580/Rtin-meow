@@ -1,0 +1,392 @@
+/* Base Styles */
+:root {
+    --primary-color: #4285F4;
+    --secondary-color: #34A853;
+    --background-color: #FFFFFF;
+    --text-color: #202124;
+    --accent-color: #FBBC04;
+    --danger-color: #EA4335;
+    --border-color: #E0E0E0;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --spacing-unit: 16px;
+    --border-radius: 8px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    line-height: 1.6;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.app-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: var(--spacing-unit);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+header h1 {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.action-button {
+    background-color: white;
+    color: var(--primary-color);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px var(--shadow-color);
+}
+
+/* Week Navigation */
+.week-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: calc(var(--spacing-unit) / 2) var(--spacing-unit);
+    background-color: #F8F9FA;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.nav-button {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 8px;
+}
+
+#current-week {
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+/* Day Selector */
+.day-selector {
+    display: flex;
+    justify-content: space-between;
+    padding: calc(var(--spacing-unit) / 2) var(--spacing-unit);
+    background-color: #F8F9FA;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 64px;
+    z-index: 5;
+}
+
+.day-item {
+    flex: 1;
+    text-align: center;
+    padding: 8px 0;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: var(--border-radius);
+}
+
+.day-item.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.day-item.today {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.day-item.today.active {
+    color: white;
+}
+
+/* Schedule Grid */
+.schedule-container {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    position: relative;
+}
+
+.time-column {
+    width: 50px;
+    position: sticky;
+    left: 0;
+    background-color: var(--background-color);
+    z-index: 2;
+    border-right: 1px solid var(--border-color);
+}
+
+.time-slot {
+    height: 60px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 4px;
+    font-size: 0.8rem;
+    color: #70757A;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.schedule-grid {
+    flex: 1;
+    position: relative;
+    min-height: 100%;
+}
+
+.hour-divider {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-bottom: 1px solid var(--border-color);
+    z-index: 1;
+}
+
+.class-entry {
+    position: absolute;
+    left: var(--spacing-unit);
+    right: var(--spacing-unit);
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: var(--border-radius);
+    padding: 8px;
+    font-size: 0.9rem;
+    overflow: hidden;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    z-index: 3;
+    cursor: pointer;
+}
+
+.class-entry h3 {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.class-entry p {
+    font-size: 0.8rem;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+}
+
+.modal-content {
+    background-color: var(--background-color);
+    margin: 10% auto;
+    width: 90%;
+    max-width: 500px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 8px var(--shadow-color);
+    position: relative;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.close-modal, .close-details-modal {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.modal h2 {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 0;
+}
+
+.form-group {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+}
+
+.day-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.day-checkboxes label {
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+    font-weight: normal;
+}
+
+.day-checkboxes input {
+    width: auto;
+    margin-right: 4px;
+}
+
+.form-actions {
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.save-button {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.delete-button {
+    background-color: transparent;
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+    padding: 10px 20px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+}
+
+/* Class Details Modal */
+.details-info {
+    padding: 16px;
+}
+
+.details-info p {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.details-info i {
+    margin-right: 8px;
+    color: var(--primary-color);
+    width: 20px;
+    text-align: center;
+}
+
+.details-actions {
+    padding: 16px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.edit-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 500;
+}
+
+/* Notification Banner */
+.notification-banner {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    padding: var(--spacing-unit);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 50;
+}
+
+.notification-banner button {
+    background-color: var(--background-color);
+    border: none;
+    padding: 8px 16px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+#enable-notifications {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+/* Responsive Adjustments */
+@media (min-width: 768px) {
+    .app-container {
+        max-width: 768px;
+    }
+
+    .modal-content {
+        width: 80%;
+    }
+}
+
+/* Loading Indicator */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
