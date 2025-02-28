@@ -29,11 +29,33 @@ async function initApp() {
     setupTimeGrid();
     setupEventListeners();
     checkNotificationPermission();
+    await testSupabaseConnection(); // Test Supabase connection
     await loadClasses();
     updateWeekDisplay();
     highlightToday();
     renderSchedule();
     setupNotificationSystem();
+}
+
+// Test Supabase connection
+async function testSupabaseConnection() {
+    try {
+        console.log('Testing Supabase connection...');
+        const { data, error } = await supabase.from('classes').select('count').limit(1);
+        
+        if (error) {
+            console.error('Supabase connection test failed:', error);
+            alert('Failed to connect to the database. Please check your Supabase setup: ' + error.message);
+            return false;
+        }
+        
+        console.log('Supabase connection test successful:', data);
+        return true;
+    } catch (err) {
+        console.error('Unexpected error in Supabase connection test:', err);
+        alert('Failed to connect to the database. Please check your Supabase setup: ' + err.message);
+        return false;
+    }
 }
 
 // Setup time grid
@@ -187,12 +209,31 @@ async function saveClass() {
         notes: classNotes
     };
 
+    console.log('Saving class data:', classData);
+
     try {
+        // Check if user is authenticated
+        const user = await checkAuth();
+        console.log('Current user:', user);
+        
+        if (!user) {
+            alert('You need to be logged in to save classes. Redirecting to login page...');
+            window.location.href = 'login.html';
+            return;
+        }
+
         if (classId) {
             // Update existing class
+            console.log('Updating class with ID:', classId);
             const { data, error } = await updateClass(classId, classData);
-            if (error) throw error;
+            console.log('Update response:', { data, error });
             
+            if (error) {
+                console.error('Error details:', error);
+                throw error;
+            }
+            
+            console.log('Class updated successfully:', data);
             // Update local classes array
             const index = classes.findIndex(c => c.id.toString() === classId);
             if (index !== -1) {
@@ -200,9 +241,16 @@ async function saveClass() {
             }
         } else {
             // Create new class
+            console.log('Creating new class');
             const { data, error } = await addClass(classData);
-            if (error) throw error;
+            console.log('Create response:', { data, error });
             
+            if (error) {
+                console.error('Error details:', error);
+                throw error;
+            }
+            
+            console.log('Class created successfully:', data);
             // Add to local classes array
             classes.push(data[0]);
         }
@@ -212,7 +260,19 @@ async function saveClass() {
         setupNotificationSystem(); // Refresh notifications
     } catch (error) {
         console.error('Error saving class:', error);
-        alert('Failed to save your class. Please try again later.');
+        let errorMessage = 'Failed to save your class: ';
+        
+        if (error.message) {
+            errorMessage += error.message;
+        } else if (error.details) {
+            errorMessage += error.details;
+        } else if (error.hint) {
+            errorMessage += error.hint;
+        } else {
+            errorMessage += 'Please try again later.';
+        }
+        
+        alert(errorMessage);
     }
 }
 

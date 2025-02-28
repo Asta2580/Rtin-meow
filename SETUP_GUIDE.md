@@ -1,81 +1,64 @@
 # Class Schedule Manager - Setup Guide
 
-This guide will help you set up the Class Schedule Manager application with Supabase backend.
+This guide will help you set up the Class Schedule Manager application with Supabase as the backend.
 
 ## Prerequisites
 
-- A Supabase account (free tier is sufficient)
-- A web server to host the application (or you can use GitHub Pages)
+- A Supabase account (sign up at [supabase.com](https://supabase.com) if you don't have one)
+- Your Supabase project URL and anon key (found in your project settings)
 
-## Supabase Setup
+## Step 1: Create a Supabase Project
 
-1. Create a new Supabase project at [https://app.supabase.com](https://app.supabase.com)
+1. Log in to your Supabase account at [app.supabase.com](https://app.supabase.com)
+2. Click "New Project" and follow the prompts to create a new project
+3. Once created, note your project URL and anon key from the API settings
 
-2. Once your project is created, go to the SQL Editor in the Supabase dashboard
+## Step 2: Set Up Database Schema
 
-3. Create a new query and paste the contents of `supabase/schema.sql` to set up the database schema
+1. In your Supabase dashboard, go to the "SQL Editor" section
+2. Create a new query
+3. Copy and paste the contents of `supabase/schema.sql` from this repository
+4. Run the SQL query to create the necessary tables and security policies
 
-4. Execute the SQL query to create the necessary tables and security policies
+## Step 3: Configure Authentication
 
-5. Go to the Authentication section and set up authentication:
-   - Enable Email/Password sign-up method
-   - Configure any additional authentication providers if needed
+1. In your Supabase dashboard, go to the "Authentication" section
+2. Under "Providers", make sure "Email" is enabled
+3. Configure any additional settings as needed (password strength, etc.)
 
-6. Go to Project Settings > API to get your API credentials:
-   - Copy the URL (e.g., `https://yourproject.supabase.co`)
-   - Copy the `anon` public API key
+## Step 4: Update Configuration
 
-7. Open `js/supabase-config.js` and update the following variables:
-   ```javascript
-   const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // Replace with your URL
-   const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Replace with your anon key
-   ```
+1. Open `js/supabase-config.js` in this project
+2. Update the `SUPABASE_URL` and `SUPABASE_KEY` variables with your project's URL and anon key
 
-## Hosting the Application
+## Step 5: Test Your Setup
 
-### Option 1: Local Development
-
-1. Use a local web server like [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) for VS Code
-
-2. Open the project folder and start the server
-
-3. Access the application at `http://localhost:5500` (or whatever port your server uses)
-
-### Option 2: GitHub Pages
-
-1. Create a new GitHub repository
-
-2. Push your code to the repository
-
-3. Go to Settings > Pages
-
-4. Select the main branch as the source and save
-
-5. Your site will be published at `https://yourusername.github.io/repository-name/`
-
-### Option 3: Web Hosting
-
-1. Upload the files to your web hosting service using FTP or their provided tools
-
-2. Access your application at your domain
-
-## Testing Notifications
-
-To test browser notifications:
-
-1. Open the application in Chrome on your Android device
-2. Allow notifications when prompted
-3. Add a class that starts within the next 15 minutes
-4. You should receive a notification 15 minutes before the class starts
+1. Open the `test-auth.html` page in your browser
+2. Click "Test Connection" to verify your Supabase connection
+3. Create a test account and try to log in
+4. Test creating a class to ensure everything is working properly
 
 ## Troubleshooting
 
-- **Notifications not working**: Make sure notifications are enabled in your browser settings
-- **Database errors**: Check the browser console for error messages and verify your Supabase credentials
-- **Authentication issues**: Ensure your Supabase project has the correct authentication settings
+If you encounter errors:
+
+1. Check the browser console for specific error messages
+2. Verify that your Supabase URL and anon key are correct
+3. Make sure the schema.sql has been executed successfully
+4. Check that you have the correct permissions set up in Supabase
+
+### Common Issues
+
+- **"Failed to save your class"**: This usually means the database schema is not set up correctly or there are permission issues.
+- **Authentication errors**: Make sure your Supabase auth settings are properly configured.
+- **CORS errors**: Check your Supabase project settings to ensure your domain is allowed.
 
 ## Next Steps
 
-- Consider adding a login/signup page for better user management
-- Implement data export/import functionality
-- Add calendar integration with Google Calendar or other services
+Once your setup is complete, you can:
+
+1. Customize the application to fit your needs
+2. Add additional features
+3. Deploy to a hosting service of your choice
+
+For more information, refer to the [Supabase documentation](https://supabase.com/docs).

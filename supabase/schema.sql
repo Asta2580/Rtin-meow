@@ -46,3 +46,49 @@ CREATE TRIGGER update_classes_updated_at
 BEFORE UPDATE ON classes
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
+
+-- Create a function to get schema information (for testing)
+CREATE OR REPLACE FUNCTION get_schema_info()
+RETURNS JSONB AS $$
+DECLARE
+    result JSONB;
+BEGIN
+    WITH table_info AS (
+        SELECT 
+            table_name,
+            json_agg(
+                json_build_object(
+                    'column_name', column_name,
+                    'data_type', data_type,
+                    'is_nullable', is_nullable
+                )
+            ) AS columns
+        FROM information_schema.columns
+        WHERE table_schema = 'public'
+        GROUP BY table_name
+    ),
+    policy_info AS (
+        SELECT 
+            tablename,
+            json_agg(
+                json_build_object(
+                    'policyname', policyname,
+                    'cmd', cmd,
+                    'permissive', permissive
+                )
+            ) AS policies
+        FROM pg_policies
+        WHERE schemaname = 'public'
+        GROUP BY tablename
+    )
+    SELECT 
+        json_build_object(
+            'tables', json_object_agg(ti.table_name, ti.columns),
+            'policies', json_object_agg(COALESCE(pi.tablename, ''), COALESCE(pi.policies, '[]'::json))
+        ) INTO result
+    FROM table_info ti
+    LEFT JOIN policy_info pi ON ti.table_name = pi.tablename;
+    
+    RETURN result;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
